@@ -1,0 +1,777 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!DOCTYPE html&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;html lang="en"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;title&gt;Karachi Tourist Map - Cinematic Experience&lt;/title&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Leaflet CSS (Lightweight Map Engine) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Leaflet MarkerCluster CSS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" /&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Google Fonts (Optimized Loading) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Markdown Parser --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>:root {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>--primary: #d4af37; /* Luxury Gold */</p>
+<p class="p1"><span class="Apple-converted-space">              </span>--glass: rgba(255, 255, 255, 0.95);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>--sidebar-width: 280px;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>body, html {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>margin: 0;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>padding: 0;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-family: 'Poppins', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: #a2d9e0; /* Matches water color to prevent white flashes */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* MAP CONTAINER */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>#map {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>top: 0; left: 0;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>z-index: 1;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: #e0f7fa;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>opacity: 0; /* Hidden initially for intro */</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transition: opacity 2s ease-in;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>will-change: opacity; /* GPU Hint */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- 10s CINEMATIC INTRO LAYER --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>#intro-layer {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>top: 0; left: 0; width: 100%; height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>z-index: 9999;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>pointer-events: none;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transition: opacity 1s ease-out;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* Two cloud layers for parallax depth */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.intro-cloud-1, .intro-cloud-2 {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 100%; height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background-image: radial-gradient(circle at 50% 50%, transparent 25%, white 80%);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>opacity: 0.95;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>will-change: transform, opacity;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* 3 Second Zoom Through Animation */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.intro-cloud-1 { animation: cloudZoom 3s ease-in forwards; z-index: 2; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.intro-cloud-2 { animation: cloudZoom 3.2s ease-in forwards; z-index: 1; opacity: 0.7; animation-delay: 0.1s; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.intro-text {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>z-index: 3;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-family: 'Playfair Display', serif;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-size: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>color: #2c3e50;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>text-shadow: 0 4px 15px rgba(255,255,255,0.9);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>animation: textFadeOut 2.5s ease-in forwards;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>@keyframes cloudZoom {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>0% { transform: scale(1); opacity: 1; }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>70% { opacity: 0.9; }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>100% { transform: scale(12); opacity: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>@keyframes textFadeOut {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>0% { opacity: 0; transform: translateY(30px); }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>20% { opacity: 1; transform: translateY(0); }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>75% { opacity: 1; transform: scale(1.05); }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>100% { opacity: 0; transform: scale(1.1) translateY(-20px); }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- DECORATIONS &amp; UI --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.vintage-overlay {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; top: 0; left: 0; width: 100%; height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: rgba(255, 240, 200, 0.08); /* Very subtle warm tint */</p>
+<p class="p1"><span class="Apple-converted-space">              </span>pointer-events: none; z-index: 400; mix-blend-mode: multiply;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.compass {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; top: 20px; right: 60px; /* Left of Zoom controls */</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 60px; height: 60px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Compass_rose_brown.svg/240px-Compass_rose_brown.svg.png') no-repeat center/contain;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>opacity: 0.85; z-index: 400;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- 3D PIN DESIGN (High Performance CSS) --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.iso-pin {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 60px; height: 80px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>pointer-events: none; position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>will-change: transform;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.iso-pin:hover {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transform: translateY(-10px) scale(1.1);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>z-index: 1000;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* Smooth Pulse for Activation */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.iso-pin.active-bounce {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>animation: pinPulse 0.8s ease-out;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>@keyframes pinPulse {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>0% { transform: scale(1) translateY(0); }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>30% { transform: scale(1.15) translateY(-20px); }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>50% { transform: scale(0.95) translateY(5px); }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>70% { transform: scale(1.05) translateY(-5px); }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>100% { transform: scale(1) translateY(0); }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.pin-head {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 48px; height: 48px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: white; border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; top: 0; left: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>align-items: center; justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: -3px 3px 0px rgba(0,0,0,0.15), 0px 8px 15px rgba(0,0,0,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>border: 2px solid white; z-index: 2; overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.pin-icon {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-size: 26px; line-height: 1;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.2));</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transform: scale(1.05);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.pin-num {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; top: -4px; right: -4px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: #d4af37; color: white;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-size: 9px; font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 16px; height: 16px; border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; align-items: center; justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>border: 2px solid white; z-index: 3;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: 0 1px 3px rgba(0,0,0,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.pin-pole { width: 4px; height: 32px; background: #333; position: absolute; bottom: 10px; left: 28px; z-index: 1; border-radius: 2px; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.pin-base { width: 14px; height: 5px; background: rgba(0,0,0,0.4); border-radius: 50%; position: absolute; bottom: 5px; left: 23px; filter: blur(2px); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* Category Colors */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.cat-art .pin-head { background: linear-gradient(135deg, #FF9F1C, #fff); border-bottom: 4px solid #FF9F1C; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.cat-landmark .pin-head { background: linear-gradient(135deg, #E63946, #fff); border-bottom: 4px solid #E63946; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.cat-nature .pin-head { background: linear-gradient(135deg, #2A9D8F, #fff); border-bottom: 4px solid #2A9D8F; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.cat-shop .pin-head { background: linear-gradient(135deg, #9D4EDD, #fff); border-bottom: 4px solid #9D4EDD; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.cat-island .pin-head { background: linear-gradient(135deg, #457B9D, #fff); border-bottom: 4px solid #457B9D; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.cat-religious .pin-head { background: linear-gradient(135deg, #F4A261, #fff); border-bottom: 4px solid #F4A261; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- SIDEBAR --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.sidebar {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>top: 20px; left: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: var(--sidebar-width);<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>height: calc(100% - 40px);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transform: translateX(calc(-1 * var(--sidebar-width) - 40px));</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: rgba(255, 255, 255, 0.98);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>border: 1px solid #d4af37;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>border-radius: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: 0 10px 30px rgba(0,0,0,0.15);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>z-index: 2000;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.sidebar.open { transform: translateX(0); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.sidebar-toggle {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; top: 20px; left: 20px; z-index: 2001;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: white; border: 2px solid #d4af37;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>padding: 10px 20px; border-radius: 50px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-family: 'Playfair Display', serif;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-weight: 700; font-size: 14px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; align-items: center; gap: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>color: #d4af37; transition: transform 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.sidebar-toggle:hover { transform: scale(1.05); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.location-list { overflow-y: auto; flex: 1; padding: 5px; scroll-behavior: smooth; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.list-item {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>padding: 10px 12px; margin-bottom: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: white; border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>cursor: pointer; display: flex; align-items: center; gap: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transition: all 0.2s; border: 1px solid #f0f0f0;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.list-item:hover { background: #fffcf0; border-color: #d4af37; padding-left: 15px; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>.list-num {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: #d4af37; color: white;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 20px; height: 20px; border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; align-items: center; justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-size: 10px; font-weight: 800; flex-shrink: 0;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.list-name { font-size: 13px; font-weight: 600; color: #444; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- BUS ICONS --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.bus-wrapper {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>will-change: transform; /* Optimized for animation */</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transition: transform 0.1s linear;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.bus-body {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.bus-w11 { font-size: 26px; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.bus-green { font-size: 22px; filter: sepia(100%) saturate(500%) hue-rotate(80deg) drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.bus-red { font-size: 24px; filter: sepia(100%) saturate(1000%) hue-rotate(-50deg) drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.bus-orange { font-size: 22px; filter: sepia(100%) saturate(1000%) hue-rotate(-20deg) drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.bus-dd { font-size: 26px; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- AI FAB --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.ai-fab {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; bottom: 30px; left: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 50px; height: 50px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: linear-gradient(135deg, #d4af37, #b4912f);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: 0 5px 15px rgba(212, 175, 55, 0.5);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>z-index: 2000; display: flex; align-items: center; justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>cursor: pointer; color: white; font-size: 24px; border: 2px solid white;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>transition: transform 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.ai-fab:hover { transform: scale(1.1); }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.ai-panel {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>left: 20px; bottom: 90px; width: 300px; height: 350px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: white; border-radius: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: 0 10px 30px rgba(0,0,0,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>border: 1px solid #d4af37;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: none; flex-direction: column; z-index: 2001; position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- POPUP ANIMATION --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.leaflet-popup { animation: popupFadeUp 0.4s cubic-bezier(0.19, 1, 0.22, 1); }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>@keyframes popupFadeUp {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>0% { transform: translateY(10px); opacity: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">              </span>100% { transform: translateY(0); opacity: 1; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.leaflet-popup-content-wrapper { border-radius: 12px; border: 2px solid #d4af37; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.popup-btn { display: block; width: 100%; background: #2c3e50; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; margin-top: 5px; font-size: 11px; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- LEGEND (Bottom Center) --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.legend-bar {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; gap: 8px; padding: 8px 20px; z-index: 1000;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: rgba(255,255,255,0.95); border-radius: 20px; border: 1px solid #d4af37;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>flex-wrap: wrap; justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: 0 5px 15px rgba(0,0,0,0.1);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.l-dot { width: 8px; height: 8px; border-radius: 50%; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.legend-pill { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #555; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- WATERMARK --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.watermark {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: absolute; bottom: 5px; right: 5px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>color: #2c3e50; background: rgba(255, 255, 255, 0.7);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>padding: 3px 8px; border-radius: 10px; border: 1px solid #d4af37;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>z-index: 2000; pointer-events: none;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>/* --- API MODAL STYLES --- */</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.api-modal {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>position: fixed; top: 0; left: 0; width: 100%; height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: rgba(0,0,0,0.5); z-index: 3000;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>display: flex; align-items: center; justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>backdrop-filter: blur(5px);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.api-content {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>background: white; padding: 25px; border-radius: 15px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 320px; text-align: center; border: 2px solid #d4af37;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-shadow: 0 10px 30px rgba(0,0,0,0.3);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>font-family: 'Poppins', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.api-content h3 { margin-top: 0; color: #2c3e50; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.api-content p { font-size: 12px; color: #666; margin-bottom: 15px; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.api-content input {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 100%; padding: 12px; margin-bottom: 15px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>border: 1px solid #ddd; border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>box-sizing: border-box;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.api-content button {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>width: 100%; padding: 12px; background: #d4af37;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>color: white; border: none; border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>cursor: pointer; font-weight: 600; margin-bottom: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.api-content .close-btn { background: #f0f0f0; color: #333; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Cinematic Intro Layer (10 Seconds) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="intro-layer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="intro-cloud-1"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="intro-cloud-2"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="intro-text"&gt;Welcome to Karachi&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="vintage-overlay"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="decor-layer"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="compass"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Sidebar Toggle --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button id="sidebarBtn" class="sidebar-toggle" onclick="toggleSidebar()"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span&gt;☰ Discover Karachi&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Sidebar Panel --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="sidebar" id="sidebar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="padding: 15px; border-bottom: 1px solid #eee; display:flex; justify-content:space-between; align-items:center;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;h3 style="margin: 0; font-size: 16px; color: #2c3e50; font-family: 'Playfair Display', serif;"&gt;Points of Interest&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;button onclick="toggleSidebar()" style="background:none; border:none; cursor:pointer; color:#d4af37; font-size:18px;"&gt;✕&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="location-list" id="locationList"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Legend (Bottom Center) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="legend-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="legend-pill"&gt;&lt;div class="l-dot" style="background:#FF9F1C"&gt;&lt;/div&gt;Art&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="legend-pill"&gt;&lt;div class="l-dot" style="background:#E63946"&gt;&lt;/div&gt;Landmark&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="legend-pill"&gt;&lt;div class="l-dot" style="background:#2A9D8F"&gt;&lt;/div&gt;Nature&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="legend-pill"&gt;&lt;div class="l-dot" style="background:#9D4EDD"&gt;&lt;/div&gt;Mall&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="legend-pill"&gt;&lt;div class="l-dot" style="background:#457B9D"&gt;&lt;/div&gt;Sea&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="legend-pill"&gt;&lt;div class="l-dot" style="background:#F4A261"&gt;&lt;/div&gt;Religious&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- AI Button --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="ai-fab" onclick="toggleAI()"&gt;🧞&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="ai-panel" id="aiPanel"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;strong style="color:#d4af37; font-family:'Playfair Display'"&gt;AI Concierge&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;span onclick="toggleAI()" style="cursor:pointer;"&gt;✕&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div id="chat-history" style="flex:1; overflow-y:auto; padding:10px; font-size:12px;"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="padding:10px; display:flex; gap:5px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;input type="text" id="chat-input" placeholder="Ask..." style="flex:1; padding:8px; border:1px solid #ddd; border-radius:4px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;button onclick="sendChat()" style="background:#d4af37; color:white; border:none; padding:0 10px; border-radius:4px;"&gt;➤&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- API Key Modal --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="apiKeyModal" class="api-modal" style="display:none;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="api-content"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;h3&gt;Enable AI Guide&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;p&gt;Please enter your Google Gemini API Key to chat with the AI Guide. It is saved safely in your browser.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;input type="password" id="apiKeyInput" placeholder="Paste API Key here..."&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;button onclick="saveApiKey()"&gt;Save &amp; Connect&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;button class="close-btn" onclick="closeApiModal()"&gt;Maybe Later&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="watermark"&gt;SPHF | Map by Rafay&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="map"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- JS Libraries --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- 1. DATA DEFINITION ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const locations = [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Art Galleries</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 1, name: "State Bank Museum &amp; Art Gallery", lat: 24.8532, lng: 67.0000, cat: 1, icon: '🏛️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 2, name: "Sambara Art Gallery", lat: 24.8320, lng: 67.0350, cat: 1, icon: '🖼️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 3, name: "Koel Gallery", lat: 24.8300, lng: 67.0380, cat: 1, icon: '🌿' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 4, name: "Canvas Gallery", lat: 24.8250, lng: 67.0400, cat: 1, icon: '🖌️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 5, name: "Chawkandi Art Gallery", lat: 24.8280, lng: 67.0370, cat: 1, icon: '🏺' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 6, name: "Amin Gulgee Gallery", lat: 24.8200, lng: 67.0450, cat: 1, icon: '🗿' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 7, name: "AAN Art Space &amp; Museum", lat: 24.8350, lng: 67.0300, cat: 1, icon: '🎭' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 8, name: "ArtChowk the Gallery", lat: 24.8380, lng: 67.0320, cat: 1, icon: '🎨' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 9, name: "Clifton Art Gallery", lat: 24.8220, lng: 67.0350, cat: 1, icon: '🖍️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 10, name: "VM Art Gallery", lat: 24.8750, lng: 67.0600, cat: 1, icon: '🖼️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Landmarks</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 11, name: "Al-Asif Square", lat: 24.9450, lng: 67.0900, cat: 2, icon: '🏢' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 12, name: "Creek Walk Phase 8 DHA", lat: 24.7700, lng: 67.0800, cat: 3, icon: '🚶' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 13, name: "Mazar-e-Quaid", lat: 24.8719, lng: 67.0409, cat: 2, icon: '🕌' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 14, name: "Wazir Mansion", lat: 24.8480, lng: 66.9950, cat: 2, icon: '🏠' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 15, name: "Quaid e Azam House Museum", lat: 24.8550, lng: 67.0280, cat: 2, icon: '🏡' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 16, name: "Mohatta Palace Museum", lat: 24.8140, lng: 67.0330, cat: 2, icon: '🏰' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 17, name: "Frere Hall", lat: 24.8470, lng: 67.0330, cat: 2, icon: '🏫' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 18, name: "KMC Building", lat: 24.8580, lng: 67.0090, cat: 2, icon: '🕰️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 19, name: "St. Patrick's Cathedral", lat: 24.8620, lng: 67.0250, cat: 6, icon: '⛪' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 20, name: "Tooba Mosque", lat: 24.8380, lng: 67.0500, cat: 6, icon: '🕌' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 21, name: "Karachi Cantt Station", lat: 24.8500, lng: 67.0350, cat: 2, icon: '🚂' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 22, name: "Bohri Bazar", lat: 24.8600, lng: 67.0200, cat: 4, icon: '🏮' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 23, name: "Max Denso Hall", lat: 24.8520, lng: 67.0050, cat: 2, icon: '📚' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 24, name: "Khalikdina Hall", lat: 24.8610, lng: 67.0120, cat: 2, icon: '🏟️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 25, name: "Sri Swaminarayan Mandir", lat: 24.8570, lng: 67.0100, cat: 6, icon: '🕉️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 26, name: "Jehangir Kothari Parade", lat: 24.8150, lng: 67.0300, cat: 2, icon: '🏯' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 27, name: "Merewether Clock Tower", lat: 24.8500, lng: 66.9980, cat: 2, icon: '🕰️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 28, name: "Habib Bank Plaza", lat: 24.8480, lng: 67.0010, cat: 2, icon: '🏦' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 29, name: "Lloyd's Bank Building", lat: 24.8510, lng: 67.0000, cat: 2, icon: '🏛️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 30, name: "Volkart Building", lat: 24.8505, lng: 66.9990, cat: 2, icon: '🏢' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Islands &amp; Sea</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 31, name: "Oyster Rocks", lat: 24.8000, lng: 67.0000, cat: 5, icon: '🪨' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 32, name: "Bundle Island", lat: 24.7500, lng: 67.1500, cat: 5, icon: '🏝️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 33, name: "Khiprianwala Island", lat: 24.7800, lng: 67.1800, cat: 5, icon: '🐊' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 34, name: "Bhit Island", lat: 24.8200, lng: 66.9700, cat: 5, icon: '🎣' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 35, name: "Baba Island", lat: 24.8250, lng: 66.9650, cat: 5, icon: '🚤' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 36, name: "Shamspir Island", lat: 24.8400, lng: 66.9300, cat: 5, icon: '🏖️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 37, name: "Charna Island", lat: 24.8967, lng: 66.6025, cat: 5, icon: '🤿' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Malls</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 38, name: "LuckyOne Mall", lat: 24.9430, lng: 67.0850, cat: 4, icon: '🎢' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 39, name: "Ocean Mall", lat: 24.8250, lng: 67.0320, cat: 4, icon: '🏬' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 40, name: "The Plaza", lat: 24.8280, lng: 67.0350, cat: 4, icon: '🏢' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 41, name: "Aashiana Shopping Mall", lat: 24.8180, lng: 67.0300, cat: 4, icon: '👗' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 42, name: "Emporium Mall", lat: 24.8800, lng: 67.1500, cat: 4, icon: '🛒' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 43, name: "Dolmen Mall Clifton", lat: 24.7950, lng: 67.0300, cat: 4, icon: '🌊' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Museums/Parks</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 44, name: "PAF Museum", lat: 24.8700, lng: 67.0900, cat: 2, icon: '✈️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 45, name: "TDF Magnifi Science Centre", lat: 24.8450, lng: 66.9950, cat: 2, icon: '🔬' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 46, name: "Pakistan Maritime Museum", lat: 24.8850, lng: 67.0850, cat: 2, icon: '⚓' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 47, name: "National Museum Of Pakistan", lat: 24.8530, lng: 67.0150, cat: 2, icon: '📜' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 48, name: "Chaukhandi Tombs", lat: 24.8700, lng: 67.3300, cat: 2, icon: '⚰️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 49, name: "Safari Park", lat: 24.9150, lng: 67.1200, cat: 3, icon: '🦁' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 50, name: "Bagh Ibn-e-Qasim", lat: 24.8100, lng: 67.0300, cat: 3, icon: '⛲' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 51, name: "Clifton Urban Forest", lat: 24.8050, lng: 67.0250, cat: 3, icon: '🌲' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 52, name: "Kidney Hill Park", lat: 24.8700, lng: 67.0700, cat: 3, icon: '⛰️' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 53, name: "Nisar Shaheed Park", lat: 24.8300, lng: 67.0600, cat: 3, icon: '🏃' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 54, name: "Jheel Park", lat: 24.8650, lng: 67.0650, cat: 3, icon: '🦆' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 55, name: "Burns Garden", lat: 24.8550, lng: 67.0130, cat: 3, icon: '🌺' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 56, name: "Bagh-e-Quaid-e-Azam", lat: 24.8700, lng: 67.0400, cat: 3, icon: '🥀' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 57, name: "Zamzama Park", lat: 24.8200, lng: 67.0380, cat: 3, icon: '🌴' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Others</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 58, name: "NAPA", lat: 24.8540, lng: 67.0180, cat: 1, icon: '🎻' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 59, name: "Arts Council", lat: 24.8560, lng: 67.0200, cat: 1, icon: '🎭' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 60, name: "Keamari No. 1", lat: 24.8100, lng: 66.9800, cat: 5, icon: '🚢' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 61, name: "Port Grand", lat: 24.8400, lng: 66.9900, cat: 4, icon: '🎡' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 62, name: "Empress Market", lat: 24.8630, lng: 67.0280, cat: 2, icon: '🏰' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 63, name: "Zainab Market", lat: 24.8580, lng: 67.0260, cat: 4, icon: '👕' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 64, name: "Clifton Beach", lat: 24.7900, lng: 67.0450, cat: 5, icon: '🐫' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 65, name: "Hawksbay", lat: 24.8500, lng: 66.8500, cat: 5, icon: '🛖' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 66, name: "Sandspit Beach", lat: 24.8300, lng: 66.9000, cat: 5, icon: '🦀' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 67, name: "Turtle Beach", lat: 24.8400, lng: 66.8800, cat: 5, icon: '🐢' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 68, name: "French Beach", lat: 24.8450, lng: 66.8300, cat: 5, icon: '🏄' },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ id: 69, name: "Cape Mount", lat: 24.8300, lng: 66.6600, cat: 5, icon: '🌄' }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- MAP SETUP ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>var strictBounds = L.latLngBounds(L.latLng(24.70, 66.50), L.latLng(25.00, 67.45));</p>
+<p class="p1"><span class="Apple-converted-space">          </span>var map = L.map('map', {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>zoomControl: false, maxZoom: 18, minZoom: 11,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>maxBounds: strictBounds, maxBoundsViscosity: 1.0, bounceAtZoomLimits: true</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// Add Tiles (CartoDB - Fast)</p>
+<p class="p1"><span class="Apple-converted-space">          </span>L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>attribution: '&amp;copy; CARTO', maxZoom: 19,</p>
+<p class="p1"><span class="Apple-converted-space">              </span>subdomains: 'abcd', // Ensure subdomains are set for faster fetching</p>
+<p class="p1"><span class="Apple-converted-space">              </span>crossOrigin: true</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}).addTo(map);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>L.control.zoom({ position: 'topright' }).addTo(map);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- CINEMATIC INTRO SEQUENCE (10 Seconds - High Performance) ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>document.addEventListener("DOMContentLoaded", function() {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// 1. Initial State: Space View</p>
+<p class="p1"><span class="Apple-converted-space">              </span>map.setView([24.86, 67.00], 5);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>// 2. Timeline</p>
+<p class="p1"><span class="Apple-converted-space">              </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>const introLayer = document.getElementById('intro-layer');</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>introLayer.style.opacity = '0';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>// Show Map</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>document.getElementById('map').style.opacity = '1';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>// Cleanup intro from DOM</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>setTimeout(() =&gt; introLayer.style.display = 'none', 1000);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>// 3. Cinematic Fly</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>var allPoints = locations.map(loc =&gt; [loc.lat, loc.lng]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>if(allPoints.length) {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>map.flyToBounds(allPoints, {</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>padding: [50, 50],</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>paddingTopLeft: [window.innerWidth &gt; 768 ? 280 : 0, 0],<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                          </span>duration: 7, // 7 Seconds Flight</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>easeLinearity: 0.1<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}, 3000); // 3s Cloud Wait</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- MARKERS ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>var markers = L.markerClusterGroup({</p>
+<p class="p1"><span class="Apple-converted-space">              </span>showCoverageOnHover: false, spiderfyOnMaxZoom: true, zoomToBoundsOnClick: true, disableClusteringAtZoom: 16</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const catClasses = { 1: 'cat-art', 2: 'cat-landmark', 3: 'cat-nature', 4: 'cat-shop', 5: 'cat-island', 6: 'cat-religious' };</p>
+<p class="p1"><span class="Apple-converted-space">          </span>var markerMap = {};<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// Optimized Animation Trigger</p>
+<p class="p1"><span class="Apple-converted-space">          </span>map.on('popupopen', function(e) {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const marker = e.popup._source;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>if(marker) {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>const iconDiv = marker.getElement();</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>if(iconDiv) {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>const pin = iconDiv.querySelector('.iso-pin');</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>if(pin) {</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>pin.classList.remove('active-bounce');</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>void pin.offsetWidth; // Force Reflow</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>pin.classList.add('active-bounce');</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>locations.forEach(loc =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const colorClass = catClasses[loc.cat] || 'cat-landmark';</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const iconHtml = `</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div class="iso-pin ${colorClass}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div class="pin-head"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;span class="pin-icon"&gt;${loc.icon}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div class="pin-num"&gt;${loc.id}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div class="pin-pole"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div class="pin-base"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const customIcon = L.divIcon({ className: 'custom-div-icon', html: iconHtml, iconSize: [60, 80], iconAnchor: [30, 75], popupAnchor: [0, -70] });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>const marker = L.marker([loc.lat, loc.lng], { icon: customIcon });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>const popupContent = `</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div style="text-align:center; font-family:'Poppins',sans-serif;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div style="font-size:30px; margin-bottom:5px;"&gt;${loc.icon}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;strong style="color:#d4af37; font-size:14px;"&gt;${loc.name}&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>&lt;button class="popup-btn" onclick="askAIAbout('${loc.name.replace(/'/g, "\\'")}')"&gt;✨ Ask Concierge&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>marker.bindPopup(popupContent);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>markers.addLayer(marker);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>markerMap[loc.id] = marker;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p1"><span class="Apple-converted-space">          </span>map.addLayer(markers);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- REAL BUS SIMULATION (Optimized Math) ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>function calculateBearing(startLat, startLng, destLat, destLng) {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const y = Math.sin(destLng * Math.PI / 180 - startLng * Math.PI / 180) * Math.cos(destLat * Math.PI / 180);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const x = Math.cos(startLat * Math.PI / 180) * Math.sin(destLat * Math.PI / 180) -</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>Math.sin(startLat * Math.PI / 180) * Math.cos(destLat * Math.PI / 180) * Math.cos(destLng * Math.PI / 180 - startLng * Math.PI / 180);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const busServices = [</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ name: "W11", icon: "🚍", class: "bus-w11", path: [[24.93, 67.09], [24.90, 67.07], [24.87, 67.05], [24.86, 67.03], [24.85, 67.00]] },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ name: "Green Line", icon: "🚌", class: "bus-green", path: [[24.98, 67.06], [24.92, 67.05], [24.88, 67.04], [24.86, 67.02]] },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ name: "Red Bus", icon: "🚌", class: "bus-red", path: [[24.89, 67.15], [24.88, 67.10], [24.87, 67.06], [24.85, 67.03]] },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ name: "Orange Line", icon: "🚌", class: "bus-orange", path: [[24.95, 67.02], [24.93, 67.03], [24.92, 67.04]] },</p>
+<p class="p1"><span class="Apple-converted-space">              </span>{ name: "Double Decker", icon: "🚍", class: "bus-dd", path: [[24.82, 67.03], [24.80, 67.03], [24.79, 67.04], [24.79, 67.05]] }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>busServices.forEach(service =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>for(let i=0; i&lt;2; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>let route = service.path;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>let startPos = Math.floor(Math.random() * (route.length - 1));</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>let busIcon = L.divIcon({<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>className: 'bus-wrapper',<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>html: `&lt;div class="bus-body ${service.class}"&gt;${service.icon}&lt;/div&gt;`,<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>iconSize: [30, 30],</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>iconAnchor: [15, 15]<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>let marker = L.marker(route[startPos], {icon: busIcon}).addTo(map);</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>animateMarker(marker, route, startPos);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>function animateMarker(marker, route, index) {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>let nextIndex = (index + 1) % route.length;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>let start = route[index];</p>
+<p class="p1"><span class="Apple-converted-space">              </span>let end = route[nextIndex];</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const dist = Math.sqrt(Math.pow(end[0]-start[0], 2) + Math.pow(end[1]-start[1], 2));</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const speed = 0.000015;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>let duration = (dist / speed) * 16;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>let startTime = performance.now();</p>
+<p class="p1"><span class="Apple-converted-space">              </span>let angle = calculateBearing(start[0], start[1], end[0], end[1]);</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const iconEl = marker.getElement();</p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Smooth Rotation Hack</p>
+<p class="p1"><span class="Apple-converted-space">              </span>if(iconEl) iconEl.style.transform += ` rotate(${angle - 90}deg)`;<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>function step(time) {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>let progress = (time - startTime) / duration;</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>if (progress &gt; 1) {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>animateMarker(marker, route, nextIndex);</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>let lat = start[0] + (end[0] - start[0]) * progress;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>let lng = start[1] + (end[1] - start[1]) * progress;</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>marker.setLatLng([lat, lng]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>// Keep icon facing direction</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>const inner = marker.getElement()?.querySelector('.bus-body');</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>if(inner) inner.style.transform = `rotate(${angle}deg)`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>requestAnimationFrame(step);</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>requestAnimationFrame(step);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- SIDEBAR TOGGLE ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>function toggleSidebar() {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const sidebar = document.getElementById('sidebar');</p>
+<p class="p1"><span class="Apple-converted-space">              </span>sidebar.classList.toggle('open');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- NAVIGATION LIST CLICK ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const listContainer = document.getElementById('locationList');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>locations.forEach(loc =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const el = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">              </span>el.className = 'list-item';</p>
+<p class="p1"><span class="Apple-converted-space">              </span>el.innerHTML = `&lt;div class="list-num"&gt;${loc.id}&lt;/div&gt;&lt;div class="list-name"&gt;${loc.name}&lt;/div&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>el.onclick = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>if (window.innerWidth &lt; 768) toggleSidebar();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>map.closePopup();</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>map.flyTo([loc.lat, loc.lng], 18, { duration: 1.5, easeLinearity: 0.25 });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>const m = markerMap[loc.id];</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>if(m) {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>markers.zoomToShowLayer(m, function() {</p>
+<p class="p1"><span class="Apple-converted-space">                              </span>m.openPopup();</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>}, 1000);</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>};</p>
+<p class="p1"><span class="Apple-converted-space">              </span>listContainer.appendChild(el);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>if (window.innerWidth &gt; 768) {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>document.getElementById('sidebar').classList.add('open');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// --- AI LOGIC ---</p>
+<p class="p1"><span class="Apple-converted-space">          </span>// Allow user to enter key for demo purposes</p>
+<p class="p1"><span class="Apple-converted-space">          </span>let apiKey = localStorage.getItem("gemini_api_key") || "";<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// -- API Key Modal Logic --</p>
+<p class="p1"><span class="Apple-converted-space">          </span>function showApiKeyModal() {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>document.getElementById('apiKeyModal').style.display = 'flex';</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>function closeApiModal() {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>document.getElementById('apiKeyModal').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>function saveApiKey() {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const input = document.getElementById('apiKeyInput');</p>
+<p class="p1"><span class="Apple-converted-space">              </span>if(input.value.trim()) {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>apiKey = input.value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>localStorage.setItem("gemini_api_key", apiKey);</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>closeApiModal();</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>alert("API Key Saved! You can now chat with the AI.");</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>async function callGemini(prompt) {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>if (!apiKey) {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>showApiKeyModal();</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>return "Please enter your Google Gemini API Key in the popup window to activate the AI Guide.";</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const payload = {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>contents: [{<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>parts: [{<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                          </span>text: `You are a knowledgeable and enthusiastic tour guide for Karachi, Pakistan.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                          </span>The user is looking at a map with 69 specific tourist locations including Art Galleries, Landmarks, Beaches, and Markets.</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>Current Context: User asked "${prompt}".</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>Keep your response concise (under 50 words if possible), helpful, and use emojis.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                          </span>If asked about a specific place, give a fun fact.`<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>}]<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>}]<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>const res = await fetch(url, {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>method: 'POST',<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>headers: {'Content-Type': 'application/json'},<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                      </span>body: JSON.stringify(payload)<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>const data = await res.json();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>if (data.error) {</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>// Handle invalid key</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>if(data.error.code === 400 || data.error.code === 403) {</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>localStorage.removeItem("gemini_api_key");</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>apiKey = "";</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>showApiKeyModal();</p>
+<p class="p1"><span class="Apple-converted-space">                          </span>return "Invalid API Key. Please enter a valid key.";</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                      </span>return "AI Service Error. Please try again later.";</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm having trouble thinking right now.";</p>
+<p class="p1"><span class="Apple-converted-space">              </span>} catch(e) {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                  </span>return "Connection Error. Please check your internet.";<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>function toggleAI() { document.getElementById('aiPanel').style.display = document.getElementById('aiPanel').style.display==='flex'?'none':'flex'; }</p>
+<p class="p1"><span class="Apple-converted-space">          </span>async function sendChat() {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const val = document.getElementById('chat-input').value;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>if(!val) return;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const history = document.getElementById('chat-history');</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history.innerHTML += `&lt;div style="text-align:right; margin:5px 0; color:#d4af37;"&gt;${val}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>document.getElementById('chat-input').value = '';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Show loading state</p>
+<p class="p1"><span class="Apple-converted-space">              </span>const loadingId = 'loading-' + Date.now();</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history.innerHTML += `&lt;div id="${loadingId}" style="background:#f9f9f9; padding:5px; border-radius:5px; margin:5px 0; font-style:italic;"&gt;Thinking...&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history.scrollTop = history.scrollHeight;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>const res = await callGemini(val);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>// Replace loading with response</p>
+<p class="p1"><span class="Apple-converted-space">              </span>document.getElementById(loadingId).remove();</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history.innerHTML += `&lt;div style="background:#f9f9f9; padding:5px; border-radius:5px; margin:5px 0;"&gt;${marked.parse(res)}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>history.scrollTop = history.scrollHeight;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>function askAIAbout(name) { toggleAI(); document.getElementById('chat-input').value = `Tell me about ${name}`; sendChat(); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/html&gt;</p>
+</body>
+</html>
